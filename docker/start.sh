@@ -34,9 +34,6 @@ if [ -z "${APP_KEY:-}" ]; then
     export APP_KEY="base64:$(php -r 'echo base64_encode(random_bytes(32));')"
 fi
 
-sed -ri "s/^Listen [0-9]+/Listen ${PORT}/" /etc/apache2/ports.conf
-sed -ri "s/<VirtualHost \*:[0-9]+>/<VirtualHost *:${PORT}>/" /etc/apache2/sites-available/000-default.conf
-
 mkdir -p "$(dirname "$DB_DATABASE")" storage/framework/cache/data storage/framework/sessions storage/framework/views bootstrap/cache
 touch "$DB_DATABASE"
 
@@ -48,4 +45,4 @@ php artisan view:cache
 
 chown -R www-data:www-data storage bootstrap/cache "$(dirname "$DB_DATABASE")"
 
-apache2-foreground
+php artisan serve --host=0.0.0.0 --port="$PORT"
