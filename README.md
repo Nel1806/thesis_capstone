@@ -78,22 +78,30 @@ GitHub Pages cannot run this app because it only hosts static files. This projec
 7. Deploy.
 8. In the service **Settings > Networking**, click **Generate Domain**.
 
-Recommended Railway variables:
+Recommended Railway variables (web service; link MySQL plugin or paste credentials):
 
 ```text
 APP_NAME=Teacher Audit System
 APP_ENV=production
 APP_DEBUG=false
 LOG_CHANNEL=stderr
-DB_CONNECTION=sqlite
+APP_URL=https://your-app.up.railway.app
+APP_KEY=base64:from-php-artisan-key-generate-show
+
+DB_CONNECTION=mysql
+DB_HOST=mysql.railway.internal
+DB_PORT=3306
+DB_DATABASE=railway
+DB_USERNAME=root
+DB_PASSWORD=your-mysql-password
+
 SESSION_DRIVER=database
 CACHE_STORE=database
 QUEUE_CONNECTION=database
 ADMIN_EMAIL=admin@deped.gov.ph
 ADMIN_PASSWORD=choose-a-password
-APP_KEY=base64:generate-this-with-php-artisan-key-generate-show
 ```
 
-The app seeds demo audit data from `database/seeders/data/teacher_audit_seed.json` during first startup, so the dashboard will not be blank.
+The Docker image includes `pdo_mysql`. On startup, `docker/start.sh` runs migrations, seeds, and `audit:sync-catalog`.
 
-For a simple thesis demo, the included SQLite setup is enough. Edits can reset after redeploys/restarts unless you attach a Railway volume and let the app use `RAILWAY_VOLUME_MOUNT_PATH` for the SQLite database.
+For SQLite instead of MySQL, set `DB_CONNECTION=sqlite` and omit the MySQL `DB_*` variables.
