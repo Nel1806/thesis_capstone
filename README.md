@@ -4,6 +4,52 @@ Laravel-based teacher audit dashboard for SDO Marikina City. It includes login, 
 
 ## Local Setup
 
+### XAMPP (MySQL / MariaDB)
+
+This copy is configured for PHP + MySQL on XAMPP. Start **Apache** and **MySQL** in the XAMPP Control Panel first.
+
+1. Create the database (phpMyAdmin or command line):
+
+   ```sql
+   SOURCE database/setup_xampp.sql;
+   ```
+
+   Or import `database/setup_xampp.sql` in phpMyAdmin.
+
+2. Install dependencies and initialize the app:
+
+   ```bash
+   composer install
+   copy .env.example .env
+   php artisan key:generate
+   php artisan migrate --seed
+   php artisan audit:sync-catalog
+   ```
+
+3. Open the app:
+
+   - **Artisan server:** `php artisan serve` then visit http://127.0.0.1:8000
+   - **Apache:** http://localhost/thesis_capstone/public
+
+   If using Apache, set `APP_URL=http://localhost/thesis_capstone/public` in `.env`.
+
+Default `.env` database settings:
+
+```text
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=thesis_capstone
+DB_USERNAME=root
+DB_PASSWORD=
+```
+
+### SQLite (optional)
+
+To use SQLite instead of MySQL, set `DB_CONNECTION=sqlite` in `.env`, create an empty `database/database.sqlite` file, then run `php artisan migrate --seed`.
+
+### Generic Laravel setup
+
 ```bash
 composer install
 cp .env.example .env

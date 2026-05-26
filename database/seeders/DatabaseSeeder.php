@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\User;
+use App\Services\MultiYearAuditSeeder;
 use App\Services\TeacherAuditImporter;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -34,6 +35,8 @@ class DatabaseSeeder extends Seeder
     private function seedAuditData(): void
     {
         if (DB::table('school_grade_audits')->exists()) {
+            app(MultiYearAuditSeeder::class)->syncPlaceholderYears();
+
             return;
         }
 
@@ -56,6 +59,8 @@ class DatabaseSeeder extends Seeder
                 }
             });
 
+            app(MultiYearAuditSeeder::class)->syncPlaceholderYears();
+
             return;
         }
 
@@ -63,6 +68,7 @@ class DatabaseSeeder extends Seeder
 
         if (is_file($path)) {
             app(TeacherAuditImporter::class)->import($path);
+            app(MultiYearAuditSeeder::class)->syncPlaceholderYears();
         }
     }
 }

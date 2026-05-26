@@ -57,13 +57,15 @@ class TeacherAuditImporter
                 }
             }
 
+            app(AuditYearCatalogSeeder::class)->sync();
+
             return $importId;
         });
     }
 
     private function importSchoolRows(int $importId, string $schoolCode, array $rows): void
     {
-        $grade = 1;
+        $grade = 0;
 
         foreach ($rows as $row) {
             $cells = $row['cells'];
@@ -77,6 +79,7 @@ class TeacherAuditImporter
             DB::table('school_grade_audits')->insert([
                 'audit_import_id' => $importId,
                 'school_code' => Str::upper($schoolCode),
+                'school_level' => 'elementary',
                 'grade_level' => $grade++,
                 'learners' => (int) round($learners),
                 'sections' => (int) round($sections),
@@ -89,7 +92,7 @@ class TeacherAuditImporter
                 'updated_at' => now(),
             ]);
 
-            if ($grade > 8) {
+            if ($grade > 6) {
                 break;
             }
         }

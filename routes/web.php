@@ -18,6 +18,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/dashboard', [AuditDashboardController::class, 'index'])->name('dashboard');
     Route::get('/schools', [AuditDashboardController::class, 'schools'])->name('schools');
     Route::put('/schools/{school}', [AuditDashboardController::class, 'updateSchool'])->name('schools.update');
+    Route::redirect('/secondary/dashboard', '/dashboard');
+    Route::get('/secondary/schools', fn () => redirect()->route('schools', ['level' => 'secondary']));
+    Route::put('/secondary/schools/{school}', [AuditDashboardController::class, 'updateSchool'])->name('secondary.schools.update');
     Route::get('/parameters', [AuditParametersController::class, 'index'])->name('parameters');
     Route::put('/parameters', [AuditParametersController::class, 'update'])->name('parameters.update');
 });
